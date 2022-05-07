@@ -1,16 +1,12 @@
-# This is a sample Python script.
+# DNA Strand Visualizations
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'DNA Strand Visualizations, {name}')  # Press ⌘F8 to toggle the breakpoint.
+def read_data(file_name):
+    file = open("./assets/"+file_name, "r")
+    return file.read()
 
 
-# Press the green button in the gutter to run the script.
+# Main function.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    print('DNA Strand Visualizations')
+    input_structure = read_data('dna_structure_1.txt')
+    print(input_structure)
