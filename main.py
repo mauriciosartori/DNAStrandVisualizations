@@ -5,8 +5,16 @@ def read_data(file_name):
     return file.read()
 
 
-# Main function.
+# Main function
 if __name__ == '__main__':
     print('DNA Strand Visualizations')
+
+    # Parentheses, dot notation
     input_structure = read_data('dna_structure_1.txt')
     print(input_structure)
+
+    # DU+ notation
+    lines = tuple(read_data('dnaStructure.txt'))
+    for line in lines:
+        print('Line says ' + line)
+
