@@ -1,4 +1,10 @@
-# DNA Strand Visualizations
+# DNA Stragit bnd Visualizations
+# Scripts to Run
+# python3 -m pip install numpy
+# python3 -m pip install scipy
+
+
+from nupack import *
 
 def read_data(file_name):
     file = open("./assets/"+file_name, "r")
@@ -13,8 +19,12 @@ if __name__ == '__main__':
     input_structure = read_data('dna_structure_1.txt')
     print(input_structure)
 
-    # DU+ notation
-    lines = tuple(read_data('dnaStructure.txt'))
-    for line in lines:
-        print('Line says ' + line)
+    # Paying around with Nupack
+    # model1 = Model(material='rna', celsius=37)
+
+    a = Domain('A4', 'Domain a')
+
+
+
+
 
