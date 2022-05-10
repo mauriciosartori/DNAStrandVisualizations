@@ -2,6 +2,7 @@ from manim import *
 
 # Demo of using the manim library.
 # https://docs.manim.community/en/stable/tutorials/quickstart.html#overview
+# manim -pql scene.py SquareAndCircle
 
 class MovingGroupToDestination(Scene):
     def construct(self):
