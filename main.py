@@ -1,9 +1,20 @@
-def print_hi(name):
-    print(f'DNA Strand Visualizations, {name}')  # Press ⌘F8 to toggle the breakpoint.
+# DNA Strand Visualizations
 
+def read_data(file_name):
+    file = open("./assets/"+file_name, "r")
+    return file.read()
+
+
+# Main function
 if __name__ == '__main__':
-    lines = tuple(open('dnaStructure.txt', 'r'))
+    print('DNA Strand Visualizations')
+
+    # Parentheses, dot notation
+    input_structure = read_data('dna_structure_1.txt')
+    print(input_structure)
+
+    # DU+ notation
+    lines = tuple(read_data('dnaStructure.txt'))
     for line in lines:
-        print_hi('Line says ' + line)
-    print_hi('PyCharm')
+        print('Line says ' + line)
 
