@@ -16,8 +16,14 @@ class DNAStrand(Scene):
         final_x = initial_x + (len(input_strand) - 1)
         line = Arrow([initial_x, 0, 0], [final_x, 0, 0], buff=0).set_color(ORANGE)
         title_text = Text('DNA Strand').to_edge(UL)
-        strand_text = Text(input_strand, color=ORANGE).next_to(title_text, DOWN)
-        self.play(Create(line), Create(title_text), Create(strand_text))
+        strand_text = Text(input_strand).next_to(title_text, DOWN)
+        self.play(Write(title_text), Write(strand_text))
+        frame_box = SurroundingRectangle(strand_text, buff=0.1)
+        self.play(
+            Create(frame_box),
+        )
+        self.wait()
+        self.play(Create(line))
 
         dots = list()
         for element in input_strand:
@@ -28,4 +34,4 @@ class DNAStrand(Scene):
             self.add(dot)
 
         self.remove(dots[-1])
-        self.wait(1)
+        self.wait(0.5)
