@@ -42,36 +42,40 @@ class DNAStrand(Scene):
 
         # Animation 2 (mfe structure)
         self.add(title_text, strand_text, frame_box)
-
+        number_parenthesis = input_strand.count('(')
+        # Build structure
         path = VMobject()
         dot = Dot()
         path.set_points_as_corners([dot.get_center(), dot.get_center()])
+
         def update_path(path):
             previous_path = path.copy()
             previous_path.add_points_as_corners([dot.get_center()])
             path.become(previous_path)
+
         path.add_updater(update_path)
         self.add(path, dot)
-        for i in range(3):
-            auxDot = Dot([i, 0, 0])
-            self.add(auxDot)
+        for i in range(number_parenthesis):
+            new_dot = Dot([i, 0, 0])
+            self.add(new_dot)
             self.play(dot.animate.shift(RIGHT))
-
-        # self.play(Rotating(dot, radians=PI, about_point=DOWN, run_time=2))
-        # self.wait()
-
-        dot1 = Dot([3, 0, 0])
+        dot1 = Dot([number_parenthesis, 0, 0])
         self.add(dot1)
         self.play(dot.animate.shift(DOWN))
-        dot2 = Dot([3, -1, 0])
+        dot2 = Dot([number_parenthesis, -1, 0])
         self.add(dot2)
-
-        for i in reversed(range(3)):
+        for i in reversed(range(number_parenthesis)):
             self.play(dot.animate.shift(LEFT))
-            auxDot = Dot([i, -1, 0])
-            self.add(auxDot)
-
+            new_dot = Dot([i, -1, 0])
+            self.add(new_dot)
+        # Add arrow at the end
         arrow = Arrow([0, -1, 0], [-2, -1, 0], buff=0, max_stroke_width_to_length_ratio=1.7)
         self.play(Create(arrow))
-
         self.wait()
+        # Add the connection lines
+        for i in range(number_parenthesis):
+            if i % 2 == 0:
+                self.play(dot.animate.shift(UP))
+            else:
+                self.play(dot.animate.shift(DOWN))
+            self.play(dot.animate.shift(RIGHT))
