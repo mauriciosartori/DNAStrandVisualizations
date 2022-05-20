@@ -1,4 +1,5 @@
 from manim import *
+import math
 
 
 # manim -pql scene.py DNAStrand
@@ -27,15 +28,17 @@ class DNAStrand(Scene):
         self.play(Create(line))
         # Add dots to animation 1
         dots = list()
+        input_strand = input_strand.translate(str.maketrans('', '', ' \n\t\r'))
         for element in input_strand:
             print(element)
             dot = Dot([initial_x, 0, 0]).scale(1.4)
             initial_x = initial_x + 1
             dots.append(dot)
+            strand_char = Text(element).next_to(dot, UP)
             self.add(dot)
+            self.play(Create(strand_char))
 
-        self.remove(dots[-1])
-        self.wait(1)
+        self.wait()
 
         # Clear the screen
         self.clear()
@@ -79,3 +82,11 @@ class DNAStrand(Scene):
             else:
                 self.play(dot.animate.shift(DOWN))
             self.play(dot.animate.shift(RIGHT))
+        #Draw circle
+        self.wait()
+        angle = math.radians(-300)
+        arc = Arc(arc_center=[4.9, -0.5, 0], radius=1, angle=angle)
+        self.add(arc)
+        self.play(Rotate(arc, angle=PI*.85, rate_func=linear))
+        self.wait()
+
