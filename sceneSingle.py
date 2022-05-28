@@ -1,5 +1,6 @@
-from manim import *
 import math
+
+from manim import *
 
 
 # manim -pql scene.py DNAStrand
@@ -11,17 +12,17 @@ def get_input_strand(file_name):
 
 class DNAStrand(Scene):
     def construct(self):
-
         # Common params
-        input_strand = get_input_strand('dnaParenDot_1.txt')
-        initial_x = 0 - (len(input_strand) / 2)
-        title_text = Text('DNA Single Strand 2').to_edge(UL)
-        strand_text = Text(input_strand).next_to(title_text, DOWN)
-        frame_box = SurroundingRectangle(strand_text, buff=0.1)
+        input_strand_text = get_input_strand('dnaParenDot_1.txt')
+        initial_x = 0 - (len(input_strand_text) / 2)
+        title_text = Text('DNA Single Strand').to_edge(UL)
+        strand_manim_text = Text(input_strand_text).next_to(title_text, DOWN)
+        frame_box = SurroundingRectangle(strand_manim_text, buff=0.1)
 
         # Show animation title
-        self.show_title(input_strand, title_text, strand_text, frame_box)
+        self.animate_strand(title_text, input_strand_text, frame_box)
 
+    def dna_shape(self, input_strand, title_text, strand_text, frame_box):
         # Animate arrow
         self.draw_arrow(input_strand, initial_x)
 
@@ -34,8 +35,19 @@ class DNAStrand(Scene):
         # Draw animation two
         self.animation_two(input_strand, title_text, strand_text, frame_box)
 
-    def show_title(self, input_strand, title_text, strand_text, frame_box):
-        self.play(Write(title_text), Write(strand_text))
+    def animate_strand(self, title_text, input_strand_text, frame_box):
+        temp_strand_text = '.' * len(input_strand_text)
+        temp_strand_text_manim = Text(temp_strand_text).next_to(title_text, DOWN)
+        self.animate_title_and_box(title_text, temp_strand_text_manim, frame_box)
+        for x in range((len(input_strand_text)) / 2):
+            self.animate_strand_text(temp_strand_text_manim)
+
+    def animate_strand_text(self, strand_text_manim):
+        self.play(Write(strand_text_manim))
+        self.wait()
+
+    def animate_title_and_box(self, title_text, strand_text, frame_box):
+        self.play(Write(title_text))
         self.play(
             Create(frame_box),
         )
@@ -109,5 +121,3 @@ class DNAStrand(Scene):
         self.add(arc)
         self.play(Rotate(arc, angle=PI * .85, rate_func=linear))
         self.wait()
-
-
