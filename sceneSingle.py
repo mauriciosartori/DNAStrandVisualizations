@@ -36,11 +36,28 @@ class DNAStrand(Scene):
         self.animation_two(input_strand, title_text, strand_text, frame_box)
 
     def animate_strand(self, title_text, input_strand_text, frame_box):
-        temp_strand_text = '.' * len(input_strand_text)
+        temp_strand_text = '.' * (len(input_strand_text) - 1)
         temp_strand_text_manim = Text(temp_strand_text).next_to(title_text, DOWN)
         self.animate_title_and_box(title_text, temp_strand_text_manim, frame_box)
-        for x in range((len(input_strand_text)) / 2):
-            self.animate_strand_text(temp_strand_text_manim)
+
+        # Start frame animations
+        stand_text_len = len(input_strand_text)
+        start_index = 0
+        end_index = stand_text_len - 2
+
+        # Create list to modify it
+        text_list = list(temp_strand_text)
+        for x in range(stand_text_len):
+            if start_index >= end_index: break
+            text_list[start_index] = input_strand_text[start_index]
+            text_list[end_index] = input_strand_text[end_index]
+            updated_strand_text = "".join(text_list)
+            scene_temp_strand_text_manim = Text(updated_strand_text).next_to(title_text, DOWN)
+            start_index += 1
+            end_index -= 1
+            self.play(Write(scene_temp_strand_text_manim))
+            self.wait(2)
+            self.remove(scene_temp_strand_text_manim)
 
     def animate_strand_text(self, strand_text_manim):
         self.play(Write(strand_text_manim))
