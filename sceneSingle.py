@@ -14,7 +14,7 @@ class DNAStrand(Scene):
     def construct(self):
         # Common params
         input_strand_text = get_input_strand('dnaParenDot_1.txt')
-        initial_x = 0 - (len(input_strand_text) / 2)
+
         title_text = Text('DNA Single Strand').to_edge(UL)
         strand_manim_text = Text(input_strand_text).next_to(title_text, DOWN)
         frame_box = SurroundingRectangle(strand_manim_text, buff=0.1)
@@ -24,8 +24,6 @@ class DNAStrand(Scene):
 
     # I am NOT calling this method now
     def dna_shape(self, input_strand, title_text, strand_text, frame_box):
-        # Animate arrow
-        self.draw_arrow(input_strand, initial_x)
 
         # Draw dots over arrow
         self.draw_dots_over_arrow(input_strand, initial_x)
@@ -40,6 +38,10 @@ class DNAStrand(Scene):
         temp_strand_text = '.' * (len(input_strand_text) - 1)
         temp_strand_text_manim = Text(temp_strand_text).next_to(title_text, DOWN)
         self.animate_title_and_box(title_text, frame_box)
+
+        # Animate arrow
+        initial_x = 0 - (len(input_strand_text) / 2)
+        self.draw_arrow(temp_strand_text_manim, initial_x)
 
         # Animate one time with only dots
         self.play(Write(temp_strand_text_manim))
