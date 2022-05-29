@@ -1,29 +1,17 @@
 from manim import *
+from util import *
 
 # Single Strand animation
 # manim -pql sceneSingleTwo.py DNAStrand
 
 
-def parse_dot_parens_plus(string):
-    items = []
-    expanded_string = ""
-    for n, char in enumerate(string):
-        if char.isdigit():
-            items.append((string[n - 1], int(char)))
-        elif n >= 1 and not string[n - 1].isdigit() and char != string[n - 1]:
-            items.append((string[n - 1], 1))
-    for char, num in items:
-        expanded_string += char * num
-    return (items, expanded_string)
-
-
 class DNAStrand(Scene):
     def construct(self):
         config.tex_template = TexTemplate()
-        STRING = '(5.6)5'
+        input_strand = get_input_strand('dnaParenDotEncoded_1.txt')
         circle_factor = 0.2
         pairs = VGroup()
-        characters, string = parse_dot_parens_plus(STRING)
+        characters, string = parse_dot_parens_plus(input_strand)
         strand = Text(string).to_corner(UL, buff=0.5).set_color(WHITE)
 
         for parenthesis in range(characters[0][1]):
