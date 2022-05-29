@@ -3,6 +3,7 @@ from manim import *
 # Double Strand animation
 # manim -pql sceneDouble.py DoubleStrand
 
+
 def get_input_strand(file_name):
     file = open("./assets/" + file_name, "r")
     return file.read()
