@@ -40,7 +40,7 @@ class DoubleStrand(MovingCameraScene):
             dots = [Dot(i, DEFAULT_DOT_RADIUS, color=PURPLE).set_z_index(10) for i in line.get_start_and_end()]
             lines.add(VGroup(line, *dots))
         self.play(ReplacementTransform(strand_1, helix_1), ReplacementTransform(strand_2, helix_2))
-        self.play(Create(lines))
+        self.add(lines)
         self.wait()
         self.play(self.camera.frame.animate.shift(LEFT*6), run_time=6)
         self.wait()
