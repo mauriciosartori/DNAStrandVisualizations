@@ -5,7 +5,7 @@ from util import *
 # manim -pql sceneDouble.py DoubleStrand
 
 
-class DoubleStrand(Scene):
+class DoubleStrand(MovingCameraScene):
     def construct(self):
         # Intro animation
         self.create_intro()
@@ -56,5 +56,15 @@ class DoubleStrand(Scene):
         stream_lines_1.start_animation(warm_up=False, flow_speed=1.5, time_width=0.5)
         stream_lines_2.start_animation(warm_up=False, flow_speed=1.5, time_width=0.5)
         self.wait(3)
+        # Zoom animation
+        self.create_zoom_effect()
         self.play(stream_lines_1.end_animation(), stream_lines_2.end_animation())
+        self.play(Restore(self.camera.frame))
         self.clear()
+
+    def create_zoom_effect(self):
+        circle = Circle(color=BLACK, radius=1)
+        self.add(circle)
+        self.camera.frame.save_state()
+        self.play(self.camera.frame.animate.set(width=circle.width*2).move_to(circle))
+        self.wait(0.3)
