@@ -2,7 +2,7 @@ import math
 from manim import *
 from util import *
 
-# manim -pql scene.py DNAStrand
+# manim -pql sceneSingle.py DNAStrand
 # ((((...))))
 
 
