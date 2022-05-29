@@ -18,9 +18,9 @@ class DoubleStrand(MovingCameraScene):
         elements = input_strand.split("+")
         print(elements)
         #f(x) = sin(x + a + sin(x))
-        strand_1 = always_redraw(lambda : axis.plot(lambda x : np.sin(x + a.get_value()) + np.sin(x) + 1).set_color(RED))
+        strand_1 = always_redraw(lambda: axis.plot(lambda x: np.sin(x + a.get_value()) + np.sin(x) + 1).set_color(RED))
         #f(x) = cos(x + a + cos(x))
-        strand_2 = always_redraw(lambda : axis.plot(lambda x : np.cos(x + a.get_value()) + np.cos(x) - 1).set_color(BLUE))
+        strand_2 = always_redraw(lambda: axis.plot(lambda x: np.cos(x + a.get_value()) + np.cos(x) - 1).set_color(BLUE))
         self.play(Create(VGroup(strand_1, strand_2)))
         self.wait()
         #Value of "a" becomes (5 * PI & - 5 * PI)
@@ -30,19 +30,25 @@ class DoubleStrand(MovingCameraScene):
         self.wait()
 
         # Final animation - Create double helix
-        helix_1 = axis.plot(lambda x : np.sin(x)).set_color(RED)
-        helix_2 = axis.plot(lambda x : np.sin(x+PI)).set_color(BLUE)
+        helix_1 = axis.plot(lambda x: np.sin(x + PI), x_range=(-16, 16)).set_color(RED)
+        helix_2 = axis.plot(lambda x: np.sin(x), x_range=(-16, 16)).set_color(BLUE)
+        lines = VGroup()
+        for i in np.arange(-7 * PI, 7 * PI, PI/6):
+            if np.isclose(i % PI, 0):
+                continue
+            line = Line(axis.i2gp(i, helix_1), axis.i2gp(i, helix_2), color=WHITE).set_z_index(-10)
+            dots = [Dot(i, DEFAULT_DOT_RADIUS, color=PURPLE).set_z_index(10) for i in line.get_start_and_end()]
+            lines.add(VGroup(line, *dots))
         self.play(ReplacementTransform(strand_1, helix_1), ReplacementTransform(strand_2, helix_2))
+        self.play(Create(lines))
+        self.wait()
+        self.play(self.camera.frame.animate.shift(LEFT*6), run_time=6)
         self.wait()
 
     def create_intro(self):
         center_text = Text('DNA Strand Visualization').center()
         self.play(Create(center_text))
         self.wait(1)
-        self.remove(center_text)
-        center_text = Text('DNA strands interact with each other without any specific order').move_to(1*UP).scale(0.7)
-        self.play(Create(center_text))
-        self.wait(2)
         self.remove(center_text)
         func_1 = lambda pos: np.sin(pos[0] / 2) * UR + np.cos(pos[1] / 2) * LEFT
         func_2 = lambda pos: np.sin(pos[0] / 2) * UR + np.cos(pos[1] / 2) * RIGHT
