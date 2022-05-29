@@ -1,9 +1,7 @@
 from manim import *
 
-config.background_color = WHITE
-config.tex_template = TexTemplate()
-
-STRING = '(5.6)5'
+# Single Strand animation
+# manim -pql sceneSingleTwo.py DNAStrand
 
 
 def parse_dot_parens_plus(string):
@@ -21,22 +19,24 @@ def parse_dot_parens_plus(string):
 
 class DNAStrand(Scene):
     def construct(self):
+        config.tex_template = TexTemplate()
+        STRING = '(5.6)5'
         circle_factor = 0.2
         pairs = VGroup()
         characters, string = parse_dot_parens_plus(STRING)
-        strand = Text(string).to_corner(UL, buff=0.5).set_color(BLACK)
+        strand = Text(string).to_corner(UL, buff=0.5).set_color(WHITE)
 
         for parenthesis in range(characters[0][1]):
             dot1 = Dot(color=RED, radius=0.2)
             dot2 = dot1.copy().set_color(ORANGE).next_to(dot1, DOWN, buff=1)
-            line = Line(dot1.get_center(), dot2.get_center(), color=BLACK, stroke_width=3.5).set_z_index(-1)
+            line = Line(dot1.get_center(), dot2.get_center(), color=WHITE, stroke_width=3.5).set_z_index(-1)
             pairs.add(VGroup(dot1, line, dot2))
         pairs.arrange(RIGHT, buff=0.5)
 
-        line_top = Line(pairs[0][0].get_center(), pairs[-1][0].get_center(), stroke_width=3.5, color=BLACK).set_z_index(
+        line_top = Line(pairs[0][0].get_center(), pairs[-1][0].get_center(), stroke_width=3.5, color=WHITE).set_z_index(
             -1)
         line_bottom = Line(pairs[0][-1].get_center(), pairs[-1][-1].get_center(), stroke_width=3.5,
-                           color=BLACK).set_z_index(-1).reverse_points()
+                           color=WHITE).set_z_index(-1).reverse_points()
 
         circle = Circle.from_three_points(pairs[-1][0].get_center(), pairs[-1][-1].get_center(),
                                           pairs[-1].get_center() + LEFT * circle_factor).rotate(PI)
@@ -46,8 +46,8 @@ class DNAStrand(Scene):
                             Rectangle(color=RED, height=pairs.height, width=5, fill_opacity=1).next_to(pairs[-1][1],
                                                                                                        LEFT,
                                                                                                        buff=0)).reverse_points()
-        circle.set_color(BLACK).set_stroke(width=3.45).set_z_index(-5)
-        rec = SurroundingRectangle(pairs[-1][1], color=WHITE, buff=0.005).set_z_index(-2).set_fill(WHITE, 1)
+        circle.set_color(WHITE).set_stroke(width=3.45).set_z_index(-5)
+        rec = SurroundingRectangle(pairs[-1][1], color=BLACK, buff=0.005).set_z_index(-2).set_fill(WHITE, 1)
 
         VGroup(line_bottom, line_top).shift(RIGHT * 0.022).stretch(1.01, 1)
         pairs.shift(RIGHT * 0.022)
@@ -79,9 +79,9 @@ class DNAStrand(Scene):
 
         A = 0.2
 
-        sin_func_top = ax.plot(lambda x: A * np.sin((x - x2) * len(pairs)) + y1, x_range=(x1, x2), color=BLACK)
+        sin_func_top = ax.plot(lambda x: A * np.sin((x - x2) * len(pairs)) + y1, x_range=(x1, x2), color=WHITE)
         sin_func_bottom = ax.plot(lambda x: A * np.sin((x - x22) * len(pairs)) + y22, x_range=(x1, x2),
-                                  color=BLACK).reverse_points()
+                                  color=WHITE).reverse_points()
         sin_func_bottom.rotate(PI / 8, about_point=sin_func_bottom.get_start())
 
         self.add(rec)
