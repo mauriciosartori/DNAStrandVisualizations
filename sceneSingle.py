@@ -1,20 +1,15 @@
 import math
-
 from manim import *
-
+from util import *
 
 # manim -pql scene.py DNAStrand
 # ((((...))))
-def get_input_strand(file_name):
-    file = open("./assets/" + file_name, "r")
-    return file.read()
 
 
 class DNAStrand(Scene):
     def construct(self):
         # Common params
         input_strand_text = get_input_strand('dnaParenDot_1.txt')
-
         title_text = Text('DNA Single Strand').to_edge(UL)
         strand_manim_text = Text(input_strand_text).next_to(title_text, DOWN)
         frame_box = SurroundingRectangle(strand_manim_text, buff=0.1)
