@@ -26,8 +26,6 @@ class DoubleStrand(MovingCameraScene):
         #Value of "a" becomes (5 * PI & - 5 * PI)
         self.play(a.animate.set_value(5 * PI), run_time=10)
         self.wait()
-        self.play(a.animate.set_value(-5 * PI), run_time=10)
-        self.wait()
 
         # Create bounds
         pairs = VGroup()
@@ -64,7 +62,7 @@ class DoubleStrand(MovingCameraScene):
         self.remove(center_text)
         center_text = Text('DNA strands interact with each other without any specific order.\n\nWhen two complementary domains react, they can combine.').move_to(1*UP).scale(0.7)
         self.play(Write(center_text))
-        self.wait(2)
+        self.wait(3)
         self.remove(center_text)
         func_1 = lambda pos: np.sin(pos[0] / 2) * UR + np.cos(pos[1] / 2) * LEFT
         func_2 = lambda pos: np.sin(pos[0] / 2) * UR + np.cos(pos[1] / 2) * RIGHT
