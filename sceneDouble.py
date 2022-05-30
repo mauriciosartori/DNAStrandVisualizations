@@ -38,6 +38,7 @@ class DoubleStrand(MovingCameraScene):
             pairs.add(VGroup(dot1, line, dot2))
         pairs.arrange(RIGHT, buff=2.0)
         self.play(Create(pairs, run_time=2))
+        self.remove(pairs)
 
         # Final animation - Create double helix
         helix_1 = axis.plot(lambda x: np.sin(x + PI), x_range=(-16, 16)).set_color(RED)
