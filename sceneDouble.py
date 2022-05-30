@@ -60,7 +60,7 @@ class DoubleStrand(MovingCameraScene):
         self.play(Create(center_text))
         self.wait(1)
         self.remove(center_text)
-        center_text = Text('DNA strands interact with each other without any specific order.\n\nWhen two complementary domains react, they can combine.').move_to(1*UP).scale(0.7)
+        center_text = Text('DNA strands interact with each other without any specific order.\n\nWhen two complementary domains react, they can combine.').move_to(1*UP).scale(0.7).
         self.play(Write(center_text))
         self.wait(3)
         self.remove(center_text)
