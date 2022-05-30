@@ -29,6 +29,16 @@ class DoubleStrand(MovingCameraScene):
         self.play(a.animate.set_value(-5 * PI), run_time=10)
         self.wait()
 
+        # Create bounds
+        pairs = VGroup()
+        for i in range(elements[0].count('(')):
+            dot1 = Dot(color=PURPLE, radius=0.2)
+            dot2 = dot1.copy().set_color(PURPLE).next_to(dot1, DOWN, buff=1)
+            line = Line(dot1.get_center(), dot2.get_center(), color=WHITE, stroke_width=3.5).set_z_index(-1)
+            pairs.add(VGroup(dot1, line, dot2))
+        pairs.arrange(RIGHT, buff=2.0)
+        self.play(Create(pairs, run_time=2))
+
         # Final animation - Create double helix
         helix_1 = axis.plot(lambda x: np.sin(x + PI), x_range=(-16, 16)).set_color(RED)
         helix_2 = axis.plot(lambda x: np.sin(x), x_range=(-16, 16)).set_color(BLUE)
