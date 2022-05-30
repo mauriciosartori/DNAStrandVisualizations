@@ -38,6 +38,7 @@ class DoubleStrand(MovingCameraScene):
             pairs.add(VGroup(dot1, line, dot2))
         pairs.arrange(RIGHT, buff=2.0)
         self.play(Create(pairs, run_time=2))
+        self.wait(2)
         self.remove(pairs)
 
         # Final animation - Create double helix
@@ -60,6 +61,10 @@ class DoubleStrand(MovingCameraScene):
         center_text = Text('DNA Strand Visualization').center()
         self.play(Create(center_text))
         self.wait(1)
+        self.remove(center_text)
+        center_text = Text('DNA strands interact with each other without any specific order.\n\nWhen two complementary domains react, they can combine.').move_to(1*UP).scale(0.7)
+        self.play(Write(center_text))
+        self.wait(2)
         self.remove(center_text)
         func_1 = lambda pos: np.sin(pos[0] / 2) * UR + np.cos(pos[1] / 2) * LEFT
         func_2 = lambda pos: np.sin(pos[0] / 2) * UR + np.cos(pos[1] / 2) * RIGHT
