@@ -1,10 +1,10 @@
 from manim import *
+
 from util import *
+
 
 # Single Strand animation
 # manim -pql sceneSingleTwo.py DNAStrand
-
-
 class DNAStrand(Scene):
     def construct(self):
         config.tex_template = TexTemplate()
@@ -12,7 +12,7 @@ class DNAStrand(Scene):
         circle_factor = 0.2
         pairs = VGroup()
         characters, string = parse_dot_parens_plus(input_strand)
-        strand = Text(string).to_corner(UL, buff=0.5).set_color(WHITE)
+        strand = Text("Strand " + string).to_corner(UL, buff=0.5).set_color(WHITE)
 
         for parenthesis in range(characters[0][1]):
             dot1 = Dot(color=RED, radius=0.2)
@@ -72,22 +72,58 @@ class DNAStrand(Scene):
                                   color=WHITE).reverse_points()
         sin_func_bottom.rotate(PI / 8, about_point=sin_func_bottom.get_start())
 
+        # Write strand title
         self.add(rec)
         self.play(Write(strand), run_time=2.3)
         self.wait(0.5)
 
+        # Play Sin + circle + Sin
         self.play(Create(VGroup(rec, sin_func_top, circle, sin_func_bottom)), run_time=3)
         self.wait(0.7)
+
+        # Replace and animate strand title for dots
+        updated_string = string.replace("(", " ")
+        updated_string = updated_string.replace(")", " ")
+        updated_strand = Text("Strand " + updated_string).to_corner(UL, buff=0.5).set_color(WHITE)
+        self.play(
+            ReplacementTransform(strand, updated_strand),
+            run_time=0.4)
+
+        # Draw dots on circle
+        self.play(LaggedStart(*[FadeIn(dot) for dot in circle_dots[::-1]],
+                              lag_ratio=0.4,
+                              run_time=n_dots / 2.5
+                              ))
+        self.wait(0.5)
+
+        # Replace AND play Sin by lines
         self.play(AnimationGroup(
             ReplacementTransform(sin_func_top, line_top),
             ReplacementTransform(sin_func_bottom, line_bottom)
         ), run_time=1.5)
-        self.play(LaggedStart(
-            *[FadeIn(dot) for dot in circle_dots[::-1]],
-            lag_ratio=0.4,
-            run_time=n_dots / 2.5
-        ))
-        self.wait(0.5)
+
+        # Count the number of occurrences of a '(' in string
+        number_pairs = string.count('(')
+        # Create list to modify
+
+        updated_string_list = list(updated_string)
+        # Aux indexes
+        start_index = 0
+        end_index = len(updated_string_list) - 1
+        old_strand = updated_strand
+        for x in range(number_pairs):
+            updated_string_list[start_index] = "("
+            updated_string_list[end_index] = ")"
+            current_string = "".join(updated_string_list)
+            latest_strand = Text("Strand " + current_string).to_corner(UL, buff=0.5).set_color(WHITE)
+            self.play(
+                ReplacementTransform(old_strand, latest_strand),
+                run_time=0.35)
+            old_strand = latest_strand
+            start_index += 1
+            end_index -= 1
+
+        # Play dots on lines
         self.play(LaggedStart(
             *[LaggedStart(FadeIn(pair[0]), Create(pair[1]), FadeIn(pair[2]), lag_ratio=0.35) for pair in pairs[::-1]],
             lag_ratio=0.4,
