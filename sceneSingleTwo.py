@@ -2,19 +2,21 @@ from manim import *
 
 from util import *
 
-
 # Single Strand animation
 # manim -pql sceneSingleTwo.py DNAStrand
 class DNAStrand(Scene):
     def construct(self):
+        Text.set_default(color=WHITE)
+
         config.tex_template = TexTemplate()
         input_strand = get_input_strand('dnaParenDotEncoded_1.txt')
         circle_factor = 0.2
         pairs = VGroup()
         characters, string = parse_dot_parens_plus(input_strand)
-        strand = Text("Strand " + string).to_corner(UL, buff=0.5).set_color(WHITE)
 
-        for parenthesis in range(characters[0][1]):
+        n_parenthesis = characters[0][1]
+
+        for parenthesis in range(n_parenthesis):
             dot1 = Dot(color=RED, radius=0.2)
             dot2 = dot1.copy().set_color(ORANGE).next_to(dot1, DOWN, buff=1)
             line = Line(dot1.get_center(), dot2.get_center(), color=WHITE, stroke_width=3.5).set_z_index(-1)
@@ -35,7 +37,7 @@ class DNAStrand(Scene):
                                                                                                        LEFT,
                                                                                                        buff=0)).reverse_points()
         circle.set_color(WHITE).set_stroke(width=3.45).set_z_index(-5)
-        rec = SurroundingRectangle(pairs[-1][1], color=BLACK, buff=0.005).set_z_index(-2).set_fill(WHITE, 1)
+        rec = SurroundingRectangle(pairs[-1][1], color=BLACK, buff=0.005).set_z_index(-2).set_fill(BLACK, 1)
 
         VGroup(line_bottom, line_top).shift(RIGHT * 0.022).stretch(1.01, 1)
         pairs.shift(RIGHT * 0.022)
@@ -72,9 +74,12 @@ class DNAStrand(Scene):
                                   color=WHITE).reverse_points()
         sin_func_bottom.rotate(PI / 8, about_point=sin_func_bottom.get_start())
 
+        strand = Text("Strand").to_corner(UL, buff=0.5).set_color(WHITE)
+        string_text = Text(string).next_to(strand, buff=0.25)
+
         # Write strand title
         self.add(rec)
-        self.play(Write(strand), run_time=2.3)
+        self.play(Write(VGroup(strand, string_text)), run_time=2.3)
         self.wait(0.5)
 
         # Play Sin + circle + Sin
@@ -82,15 +87,12 @@ class DNAStrand(Scene):
         self.wait(0.7)
 
         # Replace and animate strand title for dots
-        updated_string = string.replace("(", " ")
-        updated_string = updated_string.replace(")", " ")
-        updated_strand = Text("Strand " + updated_string).to_corner(UL, buff=0.5).set_color(WHITE)
-        self.play(
-            ReplacementTransform(strand, updated_strand),
-            run_time=0.4)
+        self.play(FadeOut(string_text), run_time=0.8)
+        self.wait(0.5)
 
         # Draw dots on circle
-        self.play(LaggedStart(*[FadeIn(dot) for dot in circle_dots[::-1]],
+        self.play(LaggedStart(*[AnimationGroup(
+            FadeIn(dot, string_text[n_parenthesis + n])) for n, dot in enumerate(circle_dots[::-1])],
                               lag_ratio=0.4,
                               run_time=n_dots / 2.5
                               ))
@@ -100,32 +102,12 @@ class DNAStrand(Scene):
         self.play(AnimationGroup(
             ReplacementTransform(sin_func_top, line_top),
             ReplacementTransform(sin_func_bottom, line_bottom)
-        ), run_time=1.5)
-
-        # Count the number of occurrences of a '(' in string
-        number_pairs = string.count('(')
-        # Create list to modify
-
-        updated_string_list = list(updated_string)
-        # Aux indexes
-        start_index = 0
-        end_index = len(updated_string_list) - 1
-        old_strand = updated_strand
-        for x in range(number_pairs):
-            updated_string_list[start_index] = "("
-            updated_string_list[end_index] = ")"
-            current_string = "".join(updated_string_list)
-            latest_strand = Text("Strand " + current_string).to_corner(UL, buff=0.5).set_color(WHITE)
-            self.play(
-                ReplacementTransform(old_strand, latest_strand),
-                run_time=0.35)
-            old_strand = latest_strand
-            start_index += 1
-            end_index -= 1
+        ), run_time=1.55)
 
         # Play dots on lines
         self.play(LaggedStart(
-            *[LaggedStart(FadeIn(pair[0]), Create(pair[1]), FadeIn(pair[2]), lag_ratio=0.35) for pair in pairs[::-1]],
+            *[LaggedStart(FadeIn(pair[0], VGroup(string_text[n], string_text[-1-n])), Create(pair[1]), FadeIn(pair[2]), lag_ratio=0.35)
+                for n, pair in enumerate(pairs[::-1])],
             lag_ratio=0.4,
             run_time=len(pairs) / 1.7
         ))
