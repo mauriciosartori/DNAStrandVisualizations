@@ -1,9 +1,10 @@
 from manim import *
-
 from util import *
 
 # Single Strand animation
 # manim -pql sceneSingleTwo.py DNAStrand
+
+
 class DNAStrand(Scene):
     def construct(self):
         Text.set_default(color=WHITE)
