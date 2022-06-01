@@ -37,6 +37,8 @@ class DoubleStrand(MovingCameraScene):
         pairs.arrange(RIGHT, buff=2.0)
         self.play(Create(pairs, run_time=2))
         self.wait(2)
+        self.create_zoom_effect(2)
+        self.wait(.5)
         self.remove(pairs)
 
         # Final animation - Create double helix
@@ -52,7 +54,7 @@ class DoubleStrand(MovingCameraScene):
         self.play(ReplacementTransform(strand_1, helix_1), ReplacementTransform(strand_2, helix_2))
         self.add(lines)
         self.wait()
-        self.play(self.camera.frame.animate.shift(LEFT*6), run_time=6)
+        self.play(self.camera.frame.animate.shift(LEFT*9), run_time=7)
         self.wait()
 
     def create_intro(self):
@@ -77,14 +79,13 @@ class DoubleStrand(MovingCameraScene):
         stream_lines_2.start_animation(warm_up=False, flow_speed=1.5, time_width=0.5)
         self.wait(3)
         # Zoom animation
-        self.create_zoom_effect()
+        self.create_zoom_effect(1)
         self.play(stream_lines_1.end_animation(), stream_lines_2.end_animation())
         self.play(Restore(self.camera.frame))
         self.clear()
 
-    def create_zoom_effect(self):
-        circle = Circle(color=BLACK, radius=1)
-        self.add(circle)
+    def create_zoom_effect(self, radius):
+        circle = Circle(color=BLACK, radius=radius)
         self.camera.frame.save_state()
         self.play(self.camera.frame.animate.set(width=circle.width*2).move_to(circle))
         self.wait(0.3)
