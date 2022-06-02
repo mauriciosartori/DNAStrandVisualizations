@@ -17,26 +17,37 @@ class DoubleStrand(MovingCameraScene):
         input_strand = input_strand.translate(str.maketrans('', '', ' \n\t\r'))
         elements = input_strand.split("+")
         print(elements)
+        strand = Text("Strand: ").to_corner(UL, buff=0.5).set_color(WHITE)
+        strand_text = Text(input_strand).next_to(strand, buff=0.25)
+        self.play(Write(VGroup(strand, strand_text)), run_time=2.3)
+        self.wait(0.5)
         #f(x) = sin(x + a + sin(x))
         strand_1 = always_redraw(lambda: axis.plot(lambda x: np.sin(x + a.get_value()) + np.sin(x) + 1).set_color(RED))
         #f(x) = cos(x + a + cos(x))
         strand_2 = always_redraw(lambda: axis.plot(lambda x: np.cos(x + a.get_value()) + np.cos(x) - 1).set_color(BLUE))
         self.play(Create(VGroup(strand_1, strand_2)))
         self.wait()
-        #Value of "a" becomes (5 * PI & - 5 * PI)
+        #Value of "a" becomes (5 * PI)
         self.play(a.animate.set_value(5 * PI), run_time=10)
         self.wait()
+        self.play(FadeOut(strand_text), run_time=0.8)
+        self.wait(0.5)
 
         # Create bounds
         pairs = VGroup()
+        updated_strand = VGroup()
         for i in range(elements[0].count('(')):
             dot1 = Dot(color=PURPLE, radius=0.2)
             dot2 = dot1.copy().set_color(PURPLE).next_to(dot1, DOWN, buff=1)
             line = Line(dot1.get_center(), dot2.get_center(), color=WHITE, stroke_width=3.5).set_z_index(-1)
             pairs.add(VGroup(dot1, line, dot2))
+            updated_strand.add(VGroup(strand_text[i], strand_text[-1-i]))
         pairs.arrange(RIGHT, buff=2.0)
-        self.play(Create(pairs, run_time=2))
+        self.play(Create(pairs, run_time=5), Create(updated_strand, run_time=5))
+        self.add(strand_text)
         self.wait(2)
+        self.create_zoom_effect(2)
+        self.wait(.5)
         self.remove(pairs)
 
         # Final animation - Create double helix
@@ -52,7 +63,7 @@ class DoubleStrand(MovingCameraScene):
         self.play(ReplacementTransform(strand_1, helix_1), ReplacementTransform(strand_2, helix_2))
         self.add(lines)
         self.wait()
-        self.play(self.camera.frame.animate.shift(LEFT*6), run_time=6)
+        self.play(self.camera.frame.animate.shift(LEFT*9), run_time=7)
         self.wait()
 
     def create_intro(self):
@@ -60,9 +71,9 @@ class DoubleStrand(MovingCameraScene):
         self.play(Create(center_text))
         self.wait(1)
         self.remove(center_text)
-        center_text = Text('DNA strands interact with each other without any specific order.\n\nWhen two complementary domains react, they can combine.').move_to(1*UP).scale(0.7)
+        center_text = Text('DNA strands interact with each other without any specific order.\n\nHowever, when two complementary domains react, they can \n\ncreate a new DNA structure.').move_to(1*UP).scale(0.7)
         self.play(Write(center_text))
-        self.wait(3)
+        self.wait(5)
         self.remove(center_text)
         func_1 = lambda pos: np.sin(pos[0] / 2) * UR + np.cos(pos[1] / 2) * LEFT
         func_2 = lambda pos: np.sin(pos[0] / 2) * UR + np.cos(pos[1] / 2) * RIGHT
@@ -75,16 +86,15 @@ class DoubleStrand(MovingCameraScene):
         self.add(stream_lines_1, stream_lines_2)
         stream_lines_1.start_animation(warm_up=False, flow_speed=1.5, time_width=0.5)
         stream_lines_2.start_animation(warm_up=False, flow_speed=1.5, time_width=0.5)
-        self.wait(3)
+        self.wait(4)
         # Zoom animation
-        self.create_zoom_effect()
+        self.create_zoom_effect(1)
         self.play(stream_lines_1.end_animation(), stream_lines_2.end_animation())
         self.play(Restore(self.camera.frame))
         self.clear()
 
-    def create_zoom_effect(self):
-        circle = Circle(color=BLACK, radius=1)
-        self.add(circle)
+    def create_zoom_effect(self, radius):
+        circle = Circle(color=BLACK, radius=radius)
         self.camera.frame.save_state()
         self.play(self.camera.frame.animate.set(width=circle.width*2).move_to(circle))
         self.wait(0.3)
