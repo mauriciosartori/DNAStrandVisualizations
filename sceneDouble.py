@@ -71,9 +71,9 @@ class DoubleStrand(MovingCameraScene):
         self.play(Create(center_text))
         self.wait(1)
         self.remove(center_text)
-        center_text = Text('DNA strands interact with each other without any specific order.\n\nWhen two complementary domains react, they can combine.').move_to(1*UP).scale(0.7)
+        center_text = Text('DNA strands interact with each other without any specific order.\n\nHowever, when two complementary domains react, they can \n\ncreate a new DNA structure.').move_to(1*UP).scale(0.7)
         self.play(Write(center_text))
-        self.wait(3)
+        self.wait(5)
         self.remove(center_text)
         func_1 = lambda pos: np.sin(pos[0] / 2) * UR + np.cos(pos[1] / 2) * LEFT
         func_2 = lambda pos: np.sin(pos[0] / 2) * UR + np.cos(pos[1] / 2) * RIGHT
@@ -86,7 +86,7 @@ class DoubleStrand(MovingCameraScene):
         self.add(stream_lines_1, stream_lines_2)
         stream_lines_1.start_animation(warm_up=False, flow_speed=1.5, time_width=0.5)
         stream_lines_2.start_animation(warm_up=False, flow_speed=1.5, time_width=0.5)
-        self.wait(3)
+        self.wait(4)
         # Zoom animation
         self.create_zoom_effect(1)
         self.play(stream_lines_1.end_animation(), stream_lines_2.end_animation())
