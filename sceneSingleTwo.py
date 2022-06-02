@@ -5,8 +5,10 @@ from util import *
 # manim -pql sceneSingleTwo.py DNAStrand
 
 
-class DNAStrand(Scene):
+class DNAStrand(MovingCameraScene):
     def construct(self):
+        # Show intro animation
+        self.create_intro()
         Text.set_default(color=WHITE)
 
         config.tex_template = TexTemplate()
@@ -113,3 +115,32 @@ class DNAStrand(Scene):
             run_time=len(pairs) / 1.7
         ))
         self.wait()
+
+    def create_intro(self):
+        center_text = Text('DNA Strand Visualization').center()
+        self.play(Create(center_text))
+        self.wait(1)
+        self.remove(center_text)
+        func = lambda pos: (pos[0] * UR + pos[1] * LEFT) - pos
+        stream_lines = StreamLines(
+            func,
+            color=WHITE,
+            x_range=[-7, 7, 1],
+            y_range=[-4, 4, 1],
+            stroke_width=3,
+            virtual_time=1,  # use shorter lines
+            max_anchors_per_line=5,  # better performance with fewer anchors
+        )
+        self.play(stream_lines.create())  # uses virtual_time as run_time
+        self.wait()
+
+        # Zoom animation
+        self.create_zoom_effect(1)
+        self.clear()
+        self.play(Restore(self.camera.frame))
+
+    def create_zoom_effect(self, radius):
+        circle = Circle(color=BLACK, radius=radius)
+        self.camera.frame.save_state()
+        self.play(self.camera.frame.animate.set(width=circle.width * 2).move_to(circle))
+        self.wait(0.3)
